@@ -1,0 +1,128 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="admin-class">
+	<template>
+	<style include="shared-styles">
+	:host {
+		--my-color: var(--accent-color);
+	}
+
+	paper-card {
+		width: 100%;
+		--paper-card-content: {
+			font-size: 26px;
+			font-weight: 500;
+			color: white;
+			background: var(--my-color);
+		}
+	}
+
+	paper-dropdown-menu {
+		--paper-input-container-focus-color: var(--my-color);
+	}
+
+	paper-button {
+		display: inline-block;
+		color: var(--my-color);
+	}
+
+	paper-fab {
+		display: inline-block;
+		margin-top: 2px;
+		float: right;
+		--paper-fab-background: var(--my-color);
+	}
+
+	#codeClass {
+		@apply(--paper-font-code2);
+	}
+	</style>
+
+	<paper-card>
+		<!-- header -->
+		<div class="card-content">
+			<iron-icon icon="maps:local-library"></iron-icon>
+			{{className}}
+		</div>
+
+		<!-- middle -->
+		<div class="card-actions">
+
+			<!--Add user to class-->
+			<paper-dropdown-menu label="Select person">
+				<paper-listbox class="dropdown-content">
+					<paper-item>
+						<general-card element-color="{{elementColor}}" text="John Smith" icon="face"></general-card>
+					</paper-item>
+					<paper-item>
+						<general-card element-color="{{elementColor}}" text="Laura Hernandez" icon="face"></general-card>
+					</paper-item>
+				</paper-listbox>
+			</paper-dropdown-menu>
+			<paper-button><iron-icon icon="check"></iron-icon>Add</paper-button>
+
+			<!--Dropdown icon-->
+			<paper-icon-button icon="hardware:keyboard-arrow-up" title="settings" onclick="_toggle()"
+			style="float:right;">
+		</paper-icon-button>
+		<script>
+		function _toggle() {
+			var moreInfo = event.currentTarget.parentElement.querySelector('iron-collapse');
+			var iconButton = Polymer.dom(event).localTarget;
+			iconButton.icon = moreInfo.opened ? 'hardware:keyboard-arrow-up'
+			: 'hardware:keyboard-arrow-down';
+			moreInfo.toggle();
+		}
+		</script>
+
+		<!--Dropdown content-->
+		<iron-collapse id="dropdown" style="width:100%;">
+			<!-- Request Cards-->
+			<user-card element-color="{{elementColor}}" person-name="Massoud Milani" is-professor></user-card>
+			<user-card element-color="{{elementColor}}" person-name="Gabriel Fernandez" is-student></user-card>
+			<user-card element-color="{{elementColor}}" person-name="Jonathan Jensen" is-student></user-card>
+			<!-- End Request Cards-->
+			<paper-fab onclick="_toggleDialog('#deleteClassDialog')" mini icon="close"></paper-fab>
+			<br><br><br>
+		</iron-collapse>
+	</div>
+</paper-card>
+
+</template>
+
+<script>
+
+Polymer({
+	is: 'admin-class',
+
+	properties: {
+
+		elementColor: {
+			type: String,
+			value: 'var(--accent-color)',
+		},
+
+		className: {
+			type: String,
+			value: 'noClassNameGiven',
+		}
+
+	},
+
+	ready: function() {
+		this.customStyle['--my-color'] = this.elementColor;
+		this.updateStyles();
+	}
+});
+</script>
+</dom-module>

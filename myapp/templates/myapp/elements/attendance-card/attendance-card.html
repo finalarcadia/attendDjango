@@ -1,0 +1,192 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="attendance-card">
+	<template>
+	<style include="shared-styles">
+	:host {
+		--my-color: var(--accent-color);
+	}
+
+	paper-card {
+		width: 100%;
+		--paper-card-content: {
+			font-size: 26px;
+			font-weight: 500;
+			color: white;
+			background: var(--my-color);
+		}
+	}
+
+	paper-dropdown-menu {
+		width: 180px;
+	}
+
+	paper-button {
+		display: inline-block;
+		color: var(--my-color);
+	}
+
+	paper-fab {
+		display: inline-block;
+		margin-top: 2px;
+		float: right;
+		--paper-fab-background: var(--my-color);
+	}
+	
+	#score {
+		float: right;
+		color: var(--my-color);
+		@apply(--paper-font-display1);
+		margin-top: 18px;
+	}
+	
+	#calendarContainer {
+		display: inline-block;
+		width: 100%;
+		font-size:0px;
+  		line-height:0px;
+	}
+	
+	#calendarItem {
+		display: inline-block;
+		text-align: center;
+		width: calc(100%/7);
+	}
+	
+	#monthContainer {
+		width: 100%;
+		color: var(--my-color);
+		text-align: center;
+	}
+
+	#monthText {
+		@apply(--paper-font-display2);
+	}
+	</style>
+
+	<paper-card>
+		<!-- header -->
+		<div class="card-content">
+			<iron-icon icon="maps:local-library"></iron-icon>
+			{{className}}
+		</div>
+
+		<!-- middle -->
+		<div class="card-actions">
+
+			<paper-dropdown-menu label="Select student">
+				<paper-listbox class="dropdown-content">
+					<paper-item>
+						<general-card element-color="{{elementColor}}" text="Gabriel Fernandez" icon="face"></general-card>
+					</paper-item>
+					<paper-item>
+						<general-card element-color="{{elementColor}}" text="Jonathan Jensen" icon="face"></general-card>
+					</paper-item>
+						</paper-listbox>
+					</paper-dropdown-menu>
+					<span id="score">Score: {{score}}%</span>
+					<br><br>
+
+					<student-bar></student-bar>
+					<br>
+					<div id="monthContainer">
+					<paper-icon-button icon="chevron-left"></paper-icon-button>
+					<span id="monthText">May</span>
+					<paper-icon-button icon="chevron-right"></paper-icon-button>
+					</div>
+					<br>
+					
+					<div id="calendarContainer">
+						<!--row 0-->
+						<div id="calendarItem">
+							<calendar-other content="S"></calendar-other>
+						</div>
+						<div id="calendarItem">
+							<calendar-other content="M"></calendar-other>
+						</div>
+						<div id="calendarItem">
+							<calendar-other content="T"></calendar-other>
+						</div>
+						<div id="calendarItem">
+							<calendar-other content="W"></calendar-other>
+						</div>
+						<div id="calendarItem">
+							<calendar-other content="T"></calendar-other>
+						</div>
+						<div id="calendarItem">
+							<calendar-other content="F"></calendar-other>
+						</div>
+						<div id="calendarItem">
+							<calendar-other content="S"></calendar-other>
+						</div>
+						<!--row 1-->
+						<div id="calendarItem">
+							<calendar-other content="1"></calendar-other>
+						</div>
+						<div id="calendarItem">
+							<calendar-fab number="2"></calendar-fab>
+						</div>
+						<div id="calendarItem">
+							<calendar-fab number="3"></calendar-fab>
+						</div>
+						<div id="calendarItem">
+							<calendar-fab number="4" state="present"></calendar-fab>
+						</div>
+						<div id="calendarItem">
+							<calendar-fab number="5"></calendar-fab>
+						</div>
+						<div id="calendarItem">
+							<calendar-fab number="6" state="late"></calendar-fab>
+						</div>
+						<div id="calendarItem">
+							<calendar-other content="7"></calendar-other>
+						</div>
+						<div id="calendarItem">
+							<calendar-other content="8"></calendar-other>
+						</div>
+					</div>
+				</div>
+			</paper-card>
+
+		</template>
+
+	<script>
+		Polymer({
+			is: 'attendance-card',
+
+			properties: {
+
+				elementColor: {
+					type: String,
+					value: 'var(--accent-color)',
+				},
+
+				className: {
+					type: String,
+					value: 'noClassNameGiven',
+				},
+
+				score: {
+					type: String,
+					value: '75',
+				}
+
+			},
+
+			ready: function() {
+				this.customStyle['--my-color'] = this.elementColor;
+				this.updateStyles();
+			}
+		});
+	</script>
+</dom-module>
