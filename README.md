@@ -23,6 +23,13 @@ CREATE USER django WITH PASSWORD 'django' CREATEDB;
 \q
 ```
 
-##Populate your local db
+###5. Populate your local db
 
 `python manage.py migrate`
+
+##REST API Tutorial dependencies
+
+```
+pip install djangorestframework
+pip install pygments
+```
