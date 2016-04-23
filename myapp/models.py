@@ -5,31 +5,33 @@ from django.utils import timezone
 
 # Create your models here.
 
-class UniversityDim(models.Model):
-    UniversityDimPK = models.AutoField(primary_key=True)
-    universityCode = models.IntegerField()
+class University(models.Model):
+    universityPK = models.AutoField(primary_key=True)
+    #Dont plan to use for now
+    #universityCode = models.IntegerField()
     universityName = models.CharField(max_length=100)
     
     def __str__(self):
         return self.universityName
 
 class Class(models.Model):
-    ClassPK = models.AutoField(primary_key=True)
+    classPK = models.AutoField(primary_key=True)
     classId = models.CharField(max_length=30)
-    name = models.CharField(max_length=100)
+    #Dont plan to use for now
+    #name = models.CharField(max_length=100)
     startTime = models.TimeField(default=timezone.now())
     endTime = models.TimeField(default=timezone.now())
     startDate = models.DateField(default=timezone.now())
     endDate = models.DateField(default=timezone.now())
     lateThreshold = models.TimeField(null=True, blank=True)
     absentThreshold = models.TimeField(null=True, blank=True)
-    locationFlag = models.BooleanField(blank=True, default=False)
+    locationFlag = models.BooleanField(default=False)
     latitude = models.DecimalField(null=True, blank=True, max_digits=9, decimal_places=6)
     longitude = models.DecimalField(null=True, blank=True,max_digits=9, decimal_places=6)
-    codeFlag = models.BooleanField(blank=True, default=False)
+    codeFlag = models.BooleanField(default=False)
     code = models.CharField(null=True, blank=True, max_length=5)
     codeExpirationDate = models.DateTimeField(null=True, blank=True)
-    universityKey = models.ForeignKey(UniversityDim, on_delete=models.CASCADE)
+    universityKey = models.ForeignKey(University, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.classId
@@ -41,14 +43,14 @@ class Attendance(models.Model):
     classkey = models.ForeignKey(Class, on_delete=models.CASCADE)
     userIdKey = models.ForeignKey(User, on_delete=models.CASCADE)
     #end of joins
-
+    
+    """
+    Don't plan to use for now - wanna keep the biggest table light on girth
     classId = models.IntegerField() #get from class join
     className = models.CharField(max_length=100) #get from class join
     studentFirstName = models.CharField(max_length=100) #get from user_id
     studentLastName = models.CharField(max_length=100) #get from user_id
-
-    date = models.DateField(default=timezone.now())
-    time = models.TimeField(default=timezone.now())
+    """
 
     ATTEMPT = 'Attempt'
     PRESENT = 'Present'
@@ -63,30 +65,41 @@ class Attendance(models.Model):
     mark = models.CharField(max_length=10,
                                       choices=MARK_CHOICES,
                                       default=ATTEMPT)
+    date = models.DateField(default=timezone.now())
+    time = models.TimeField(default=timezone.now())
 
-    def __str__(self):
-        return self.studentName
-
-class UserDetailDim(models.Model):
-    UserDetailDimPK = models.AutoField(primary_key=True)
-    schoolId = models.IntegerField()
+class UserDetail(models.Model):
+    userDetailPK = models.AutoField(primary_key=True)
     #below are the joins
-    universityKey = models.ForeignKey(UniversityDim, on_delete=models.CASCADE)
     userIdKey = models.ForeignKey(User, on_delete=models.CASCADE)
+    universityKey = models.ForeignKey(University, on_delete=models.CASCADE)
     #end of joins
+    schoolId = models.IntegerField()
+    """
+    Don't plan to use for now
+    not even sure what an user_id is - they already have PK and schoolId
     user_id = models.IntegerField()
     universityCode = models.IntegerField()
+    """
 
 class ClassRequest(models.Model):
     classRequestPK = models.AutoField(primary_key=True)
     #below are the joins
     userIdKey = models.ForeignKey(User, on_delete=models.CASCADE)
-    schoolIdKey = models.ForeignKey(UserDetailDim, on_delete=models.CASCADE)
+    #Dont think we need this - it would be a FK on university anyway, not userDetail
+    #schoolIdKey = models.ForeignKey(UserDetail, on_delete=models.CASCADE)
     classIdKey = models.ForeignKey(Class, on_delete=models.CASCADE)
     #end of joins
     className = models.CharField(max_length=100)
-    universityName = models.CharField(max_length=100) #get from school_id join
-    userType = models.BooleanField(default=False) #get from user_id join 1 for professor, 0 for student
+    #dont think we need this
+    #universityName = models.CharField(max_length=100) #get from school_id join
+    
+    #0 student, 1 professor
+    userType = models.BooleanField(default=False) #get from user_id join
+    
+    #added this to implement "Student x dropped from class y request(notification)"
+    #0 normal request, 1 drop request
+    userType = models.BooleanField(default=False)
 
 
 class ClassRoster (models.Model):
