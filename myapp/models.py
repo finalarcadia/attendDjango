@@ -19,10 +19,10 @@ class Class(models.Model):
     classId = models.CharField(max_length=30)
     #Dont plan to use for now
     #name = models.CharField(max_length=100)
-    startTime = models.TimeField(default=timezone.now())
-    endTime = models.TimeField(default=timezone.now())
-    startDate = models.DateField(default=timezone.now())
-    endDate = models.DateField(default=timezone.now())
+    startTime = models.TimeField()
+    endTime = models.TimeField()
+    startDate = models.DateField()
+    endDate = models.DateField()
     lateThreshold = models.TimeField(null=True, blank=True)
     absentThreshold = models.TimeField(null=True, blank=True)
     locationFlag = models.BooleanField(default=False)
@@ -65,11 +65,12 @@ class Attendance(models.Model):
     mark = models.CharField(max_length=10,
                                       choices=MARK_CHOICES,
                                       default=ATTEMPT)
-    date = models.DateField(default=timezone.now())
-    time = models.TimeField(default=timezone.now())
+    date = models.DateField()
+    time = models.TimeField()
 
 class UserDetail(models.Model):
     userDetailPK = models.AutoField(primary_key=True)
+    userType = models.CharField(max_length=10)
     #below are the joins
     userIdKey = models.ForeignKey(User, on_delete=models.CASCADE)
     universityKey = models.ForeignKey(University, on_delete=models.CASCADE)
@@ -95,11 +96,11 @@ class ClassRequest(models.Model):
     #universityName = models.CharField(max_length=100) #get from school_id join
     
     #0 student, 1 professor
-    userType = models.BooleanField(default=False) #get from user_id join
+    #userType = models.BooleanField(default=False) #get from user_id join
     
     #added this to implement "Student x dropped from class y request(notification)"
     #0 normal request, 1 drop request
-    userType = models.BooleanField(default=False)
+    requestType = models.BooleanField(default=False)
 
 
 class ClassRoster (models.Model):

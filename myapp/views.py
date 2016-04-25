@@ -1,8 +1,8 @@
 #models
 from django.contrib.auth.models import User, Group
-from .models import Class
+from .models import Class, University, UserDetail
 #serializers
-from .serializers import UserSerializer, GroupSerializer, ClassSerializer, AuthSerializer
+from .serializers import UserSerializer, ClassSerializer, AuthSerializer, UniversitySerializer, UserDetailSerializer
 #viewsets
 from rest_framework import viewsets
 #classviews
@@ -25,15 +25,21 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
 
-#/myapp/groups
-class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-
 #/myapp/classes    
 class ClassViewSet(viewsets.ModelViewSet):
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
+    
+#/myapp/universities   
+class UniversityViewSet(viewsets.ModelViewSet):
+    queryset = University.objects.all()
+    serializer_class = UniversitySerializer
+    
+#/myapp/userdetails
+#Can use this to create users
+class UserDetailViewSet(viewsets.ModelViewSet):
+    queryset = UserDetail.objects.all()
+    serializer_class = UserDetailSerializer
     
     
 """
