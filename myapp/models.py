@@ -111,7 +111,7 @@ class ClassRoster (models.Model):
     userIdKey = models.ForeignKey(User, on_delete=models.CASCADE)
     #end of joins
 
-    className = models.CharField(max_length=100) #get from class join
-    studentName = models.CharField(max_length=100)  #get from user_id join
-    professorName = models.CharField(max_length=100)  #get from user_id join
-    adminName = models.CharField(max_length=100) #get from user_id join
+    #className = models.CharField(max_length=100) #get from class join
+    #studentName = models.CharField(max_length=100)  #get from user_id join
+    #professorName = models.CharField(max_length=100)  #get from user_id join
+    #adminName = models.CharField(max_length=100) #get from user_id join

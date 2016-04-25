@@ -1,8 +1,8 @@
 #models
 from django.contrib.auth.models import User, Group
-from .models import Class, University, UserDetail
+from .models import Class, University, UserDetail, ClassRoster
 #serializers
-from .serializers import UserSerializer, ClassSerializer, AuthSerializer, UniversitySerializer, UserDetailSerializer
+from .serializers import UserSerializer, ClassSerializer, AuthSerializer, UniversitySerializer, UserDetailSerializer, ClassRosterSerializer
 #viewsets
 from rest_framework import viewsets
 #classviews
@@ -10,8 +10,12 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+#generic classes
+from rest_framework import generics
 #authentication
 from django.contrib.auth import authenticate
+#filters
+from rest_framework.filters import DjangoFilterBackend
 
 """
 Viewsets have predefined get/post/delete functionality for a queryset.
@@ -24,11 +28,19 @@ use the Classviews bellow for specific querries from client
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['username', 'password']
 
-#/myapp/classes    
+#/myapp/classes
+"""
+Filter example:
+/myapp/classes/?universityKey=1
+"""
 class ClassViewSet(viewsets.ModelViewSet):
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['universityKey']
     
 #/myapp/universities   
 class UniversityViewSet(viewsets.ModelViewSet):
@@ -40,6 +52,13 @@ class UniversityViewSet(viewsets.ModelViewSet):
 class UserDetailViewSet(viewsets.ModelViewSet):
     queryset = UserDetail.objects.all()
     serializer_class = UserDetailSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['userIdKey', 'universityKey']
+    
+#/myapp/roster    
+class ClassRosterViewSet(viewsets.ModelViewSet):
+    queryset = ClassRoster.objects.all()
+    serializer_class = ClassRosterSerializer
     
     
 """
@@ -69,3 +88,17 @@ class AuthView(APIView):
         user = self.get_object(usr, pw)
         serializer = AuthSerializer(user)
         return Response(serializer.data)
+        
+"""
+/myapp/adminlists/pk
+list of all students from university pk
+"""
+class AdminListView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        university = self.kwargs['pk']
+        users = set()
+        for u in UserDetail.objects.filter(universityKey_id=university).select_related('userIdKey'):
+            users.add(u.userIdKey)
+        return users

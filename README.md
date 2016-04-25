@@ -14,6 +14,8 @@
 sudo pip install Django
 sudo pip install djangorestframework
 sudo pip install django-cors-headers
+sudo pip install django-filter
+sudo pip install django-url-filter
 ```
 Also: Postgress. See below.
 ##Database Clear/Add
