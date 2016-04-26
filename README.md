@@ -1,14 +1,6 @@
 # attendDjango
 ##TODO
-1.Add cors dependency to your machine.
-2.Change something in db if its too bothersome for some queries.
-3.Look at comments in views.py on how to create classviews, and start creating some that the client needs
-..*Examples: Given a userPK, return all classes user is enrolled in. 
-..*Given a userPK, return university PK. 
-..*Given universityPK, return all classes in university.
 ##Latest Notes
-1.Added instructions for clearing database, might need to with all the DB changes. Remember to create some superusers again afterwards.
-2.Removed some fields and added comments all throughout models.py, renamed some things. The less info might increase amount of querries, but the focus right now is fast communication with the client (the client sends Primary Keys only, the server gives it back data).
 ##Dependencies
 ```
 sudo pip install Django
@@ -18,7 +10,7 @@ sudo pip install django-filter
 sudo pip install django-url-filter
 ```
 Also: Postgress. See below.
-##Database Clear/Add
+##Database Clear/Add/Start
 ###Clear
 terminal
 ```
@@ -35,6 +27,11 @@ CREATE DATABASE attenddb;
 \connect attenddb
 CREATE USER django WITH PASSWORD 'django' CREATEDB;
 \q
+```
+###Start
+```
+python manage.py makemigrations myapp
+python manage.py migrate
 ```
 ##Postgress
 

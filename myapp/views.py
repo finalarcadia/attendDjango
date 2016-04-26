@@ -59,6 +59,8 @@ class UserDetailViewSet(viewsets.ModelViewSet):
 class ClassRosterViewSet(viewsets.ModelViewSet):
     queryset = ClassRoster.objects.all()
     serializer_class = ClassRosterSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['userIdKey', 'classIdKey']
     
     
 """
@@ -90,10 +92,10 @@ class AuthView(APIView):
         return Response(serializer.data)
         
 """
-/myapp/adminlists/pk
-list of all students from university pk
+/myapp/usersfromuniversity/pk
+list of all students from a given university pk
 """
-class AdminListView(generics.ListAPIView):
+class UserUniversityView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
@@ -101,4 +103,18 @@ class AdminListView(generics.ListAPIView):
         users = set()
         for u in UserDetail.objects.filter(universityKey_id=university).select_related('userIdKey'):
             users.add(u.userIdKey)
-        return users
+        return list(users)
+        
+"""
+/myapp/usersfromclass/pk
+list of all students from a given class pk
+"""
+class UserClassListView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        clax = self.kwargs['pk']
+        users = set()
+        for u in ClassRoster.objects.filter(classIdKey_id=clax).select_related('userIdKey'):
+            users.add(u.userIdKey)
+        return list(users)

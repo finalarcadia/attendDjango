@@ -14,5 +14,6 @@ router.register(r'roster', views.ClassRosterViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^auth/(?P<usr>[a-z0-9]+)/(?P<pw>[a-z0-9]+)/$', views.AuthView.as_view()),
-    url(r'^adminlists/(?P<pk>[0-9]+)/$', views.AdminListView.as_view())
+    url(r'^usersfromuniversity/(?P<pk>[0-9]+)/$', views.UserUniversityView.as_view()),
+    url(r'^usersfromclass/(?P<pk>[0-9]+)/$', views.UserClassListView.as_view())
 ]
