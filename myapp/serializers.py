@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from .models import Class, University, UserDetail, ClassRoster
+from .models import Class, University, UserDetail, ClassRoster, Attendance
 from rest_framework import serializers
 
 
@@ -25,7 +25,9 @@ class ClassSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Class
         fields = ('classPK', 'classId', 'startTime', 'endTime',
-        'startDate', 'endDate', 'universityKey')
+        'startDate', 'endDate', 'lateThreshold', 'absentThreshold',
+        'locationFlag', 'latitude', 'longitude', 'codeFlag', 'code',
+        'codeExpiration', 'universityKey', 'updated')
         
 class UserDetailSerializer(serializers.HyperlinkedModelSerializer):
     #must do this for Foreign Keys
@@ -44,3 +46,12 @@ class ClassRosterSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ClassRoster
         fields = ('classRosterPK','classIdKey', 'userIdKey')
+        
+class AttendanceSerializer(serializers.HyperlinkedModelSerializer):
+    #must do this for Foreign Keys
+    classkey = serializers.PrimaryKeyRelatedField(queryset=Class.objects.all())
+    userIdKey = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    
+    class Meta:
+        model = Attendance
+        fields = ('attendancePK','time', 'date', 'mark', 'classkey', 'userIdKey')

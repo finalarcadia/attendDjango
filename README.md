@@ -1,5 +1,22 @@
 # attendDjango
 ##TODO
+Admin:
+
+remove user
+
+remove class (get data from clicked element listener?)
+
+Professor:
+
+code generation
+
+location
+
+Student:
+
+fix student bar (number to string conversion)
+
+attendance logic
 ##Latest Notes
 ##Dependencies
 ```

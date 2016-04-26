@@ -17,6 +17,7 @@ class Class(models.Model):
     classPK = models.AutoField(primary_key=True)
     
     classId = models.CharField(max_length=30)
+    updated = models.DateTimeField(auto_now=True)
     startTime = models.TimeField()
     endTime = models.TimeField()
     startDate = models.DateField()
@@ -39,16 +40,18 @@ class Class(models.Model):
 class Attendance(models.Model):
     attendancePK = models.AutoField(primary_key=True)
     
-    dateTime = models.DateTimeField(null=True, blank=True)
-    ATTEMPT = 'Attempt'
-    PRESENT = 'Present'
-    LATE = 'Late'
-    ABSENT = 'Absent'
+    time = models.TimeField(auto_now=True)
+    date = models.DateField(auto_now=True)
+    
+    ATTEMPT = 'attempt'
+    PRESENT = 'present'
+    LATE = 'late'
+    ABSENT = 'absent'
     MARK_CHOICES = (
-        (ATTEMPT, 'Attempt'),
-        (PRESENT, 'Present'),
-        (LATE, 'Late'),
-        (ABSENT, 'Absent'),
+        (ATTEMPT, 'attempt'),
+        (PRESENT, 'present'),
+        (LATE, 'late'),
+        (ABSENT, 'absent'),
     )
     mark = models.CharField(max_length=10,
                                       choices=MARK_CHOICES,
@@ -57,6 +60,9 @@ class Attendance(models.Model):
     #FKS
     classkey = models.ForeignKey(Class, on_delete=models.CASCADE)
     userIdKey = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    #class Meta:
+        #unique_together = ('userIdKey', 'classkey', 'date')
 
 class UserDetail(models.Model):
     userDetailPK = models.AutoField(primary_key=True)

@@ -1,8 +1,8 @@
 #models
 from django.contrib.auth.models import User, Group
-from .models import Class, University, UserDetail, ClassRoster
+from .models import Class, University, UserDetail, ClassRoster, Attendance
 #serializers
-from .serializers import UserSerializer, ClassSerializer, AuthSerializer, UniversitySerializer, UserDetailSerializer, ClassRosterSerializer
+from .serializers import UserSerializer, ClassSerializer, AuthSerializer, UniversitySerializer, UserDetailSerializer, ClassRosterSerializer, AttendanceSerializer
 #viewsets
 from rest_framework import viewsets
 #classviews
@@ -54,6 +54,13 @@ class UserDetailViewSet(viewsets.ModelViewSet):
     serializer_class = UserDetailSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['userIdKey', 'universityKey']
+
+#/myapp/attendance    
+class AttendanceViewSet(viewsets.ModelViewSet):
+    queryset = Attendance.objects.all()
+    serializer_class = AttendanceSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['userIdKey', 'classkey', 'mark']
     
 #/myapp/roster    
 class ClassRosterViewSet(viewsets.ModelViewSet):
@@ -113,8 +120,22 @@ class UserClassListView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        clax = self.kwargs['pk']
+        classx = self.kwargs['pk']
         users = set()
-        for u in ClassRoster.objects.filter(classIdKey_id=clax).select_related('userIdKey'):
+        for u in ClassRoster.objects.filter(classIdKey_id=classx).select_related('userIdKey'):
             users.add(u.userIdKey)
         return list(users)
+        
+"""
+/myapp/classesfromuser/pk
+list of all classes a given user is enrolled in
+"""
+class ClassUserListView(generics.ListAPIView):
+    serializer_class = ClassSerializer
+
+    def get_queryset(self):
+        usrx = self.kwargs['pk']
+        classes = set()
+        for u in ClassRoster.objects.filter(userIdKey_id=usrx).select_related('classIdKey'):
+            classes.add(u.classIdKey)
+        return list(classes)
