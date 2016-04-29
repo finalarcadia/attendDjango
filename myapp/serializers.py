@@ -24,10 +24,8 @@ class ClassSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = Class
-        fields = ('classPK', 'classId', 'startTime', 'endTime',
-        'startDate', 'endDate', 'lateThreshold', 'absentThreshold',
-        'locationFlag', 'latitude', 'longitude', 'codeFlag', 'code',
-        'codeExpiration', 'universityKey', 'updated')
+        fields = ('classPK', 'classId', 'update', 'start', 'lateThreshold', 'absentThreshold',
+        'codeExpiration', 'locationFlag', 'latitude', 'longitude', 'codeFlag', 'code', 'universityKey')
         
 class UserDetailSerializer(serializers.HyperlinkedModelSerializer):
     #must do this for Foreign Keys
@@ -54,4 +52,4 @@ class AttendanceSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = Attendance
-        fields = ('attendancePK','time', 'date', 'mark', 'classkey', 'userIdKey')
+        fields = ('attendancePK','time', 'mark', 'classkey', 'userIdKey')

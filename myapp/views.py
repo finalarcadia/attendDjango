@@ -16,6 +16,9 @@ from rest_framework import generics
 from django.contrib.auth import authenticate
 #filters
 from rest_framework.filters import DjangoFilterBackend
+#datees
+from django.utils import timezone
+import datetime
 
 """
 Viewsets have predefined get/post/delete functionality for a queryset.
@@ -139,3 +142,38 @@ class ClassUserListView(generics.ListAPIView):
         for u in ClassRoster.objects.filter(userIdKey_id=usrx).select_related('classIdKey'):
             classes.add(u.classIdKey)
         return list(classes)
+        
+"""
+/myapp/roster/pk/class
+Mark attendance for given user pk and class
+"""
+class RecordView(APIView):
+
+    def getTime(var):
+        return datetime.time(var.hour, var.minute, var.second)
+
+    def post(self, request, pk, classpk, format=None):
+        c = Class.objects.get(classPK=classpk)
+        
+        now = datetime.datetime.now()
+        start = c.start
+        late = start + datetime.timedelta(minutes=c.lateThreshold)
+        absent = start + datetime.timedelta(minutes=c.absentThreshold)
+        now = datetime.time(now.hour, now.minute, now.second)
+        start = datetime.time(start.hour, start.minute, start.second)
+        late = datetime.time(late.hour, late.minute, late.second)
+        absent = datetime.time(absent.hour, absent.minute, absent.second)
+        
+        if (now < start):
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif (now <= late):
+            mrk = 'present'
+        elif (now <= absent):
+            mrk = 'late'
+        else:
+            mrk = 'absent'
+        
+        record = Attendance(mark=mrk, classkey=Class.objects.get(classPK=classpk), userIdKey=User.objects.get(id=pk))
+        record.save()
+        serializer = AttendanceSerializer(record)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

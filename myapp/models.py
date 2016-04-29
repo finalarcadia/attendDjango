@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User, Group
 from django.db import models
 from django.utils import timezone
-
+import datetime
 # Create your models here.
 
 class University(models.Model):
@@ -17,19 +17,16 @@ class Class(models.Model):
     classPK = models.AutoField(primary_key=True)
     
     classId = models.CharField(max_length=30)
-    updated = models.DateTimeField(auto_now=True)
-    startTime = models.TimeField()
-    endTime = models.TimeField()
-    startDate = models.DateField()
-    endDate = models.DateField()
-    lateThreshold = models.TimeField(null=True, blank=True)
-    absentThreshold = models.TimeField(null=True, blank=True)
+    update = models.DateTimeField(auto_now=True)
+    start = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    lateThreshold = models.IntegerField(null=True, blank=True)
+    absentThreshold = models.IntegerField(null=True, blank=True)
+    codeExpiration = models.IntegerField(null=True, blank=True)
     locationFlag = models.BooleanField(default=False)
     latitude = models.DecimalField(null=True, blank=True, max_digits=9, decimal_places=6)
     longitude = models.DecimalField(null=True, blank=True,max_digits=9, decimal_places=6)
     codeFlag = models.BooleanField(default=False)
     code = models.CharField(null=True, blank=True, max_length=5)
-    codeExpiration = models.TimeField(null=True, blank=True)
     
     #FKS
     universityKey = models.ForeignKey(University, on_delete=models.CASCADE)
@@ -40,8 +37,7 @@ class Class(models.Model):
 class Attendance(models.Model):
     attendancePK = models.AutoField(primary_key=True)
     
-    time = models.TimeField(auto_now=True)
-    date = models.DateField(auto_now=True)
+    time = models.DateTimeField(auto_now=True)
     
     ATTEMPT = 'attempt'
     PRESENT = 'present'
