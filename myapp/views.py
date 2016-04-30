@@ -1,8 +1,8 @@
 #models
 from django.contrib.auth.models import User, Group
-from .models import Class, University, UserDetail, ClassRoster, Attendance
+from .models import Class, University, UserDetail, ClassRoster, Attendance, ClassRequest
 #serializers
-from .serializers import UserSerializer, ClassSerializer, AuthSerializer, UniversitySerializer, UserDetailSerializer, ClassRosterSerializer, AttendanceSerializer
+from .serializers import UserSerializer, ClassSerializer, AuthSerializer, UniversitySerializer, UserDetailSerializer, ClassRosterSerializer, AttendanceSerializer, ClassRequestSerializer
 #viewsets
 from rest_framework import viewsets
 #classviews
@@ -69,6 +69,13 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 class ClassRosterViewSet(viewsets.ModelViewSet):
     queryset = ClassRoster.objects.all()
     serializer_class = ClassRosterSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['userIdKey', 'classIdKey']
+    
+#/myapp/requests    
+class ClassRequestViewSet(viewsets.ModelViewSet):
+    queryset = ClassRequest.objects.all()
+    serializer_class = ClassRequestSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['userIdKey', 'classIdKey']
     
@@ -139,9 +146,43 @@ class ClassUserListView(generics.ListAPIView):
     def get_queryset(self):
         usrx = self.kwargs['pk']
         classes = set()
-        for u in ClassRoster.objects.filter(userIdKey_id=usrx).select_related('classIdKey'):
-            classes.add(u.classIdKey)
+        for c in ClassRoster.objects.filter(userIdKey_id=usrx).select_related('classIdKey'):
+            classes.add(c.classIdKey)
         return list(classes)
+        
+"""
+/myapp/requestsfromuser/pk
+"""
+class RequestUserListView(generics.ListAPIView):
+    serializer_class = ClassRequestSerializer
+
+    def get_queryset(self):
+        usrx = self.kwargs['pk']
+        classes = set()
+        requests = set()
+        for c in ClassRoster.objects.filter(userIdKey_id=usrx).select_related('classIdKey'):
+            classes.add(c.classIdKey)
+        for clx in list(classes):
+            for r in clx.classrequest_set.all():
+                requests.add(r)
+        return list(requests)
+        
+"""
+/myapp/requestsfromuniversity/pk
+"""
+class RequestUniversityListView(generics.ListAPIView):
+    serializer_class = ClassRequestSerializer
+
+    def get_queryset(self):
+        unipk = self.kwargs['pk']
+        classes = set()
+        requests = set()
+        for c in University.objects.get(universityPK=unipk).class_set.all():
+            classes.add(c)
+        for clx in list(classes):
+            for r in clx.classrequest_set.all():
+                requests.add(r)
+        return list(requests)
         
 """
 /myapp/roster/pk/class
