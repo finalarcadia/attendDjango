@@ -1,34 +1,24 @@
-# attendDjango
-##TODO
-Admin:
+# Attend.io Backend
 
-remove user
+Django and Django REST Framework For Attend.io
 
-remove class (get data from clicked element listener?)
+![api root](/screenshots/home.png)
 
-Professor:
+#Usage
 
-code generation
+### Python Virtual Machine (Unix)
 
-location
+1. `source venv/bin/activate` - Load the environment, run scripts and develop under environment
+2. `deactivate` - Unload the environment when you're done with python
 
-Student:
+### Django Quickstart
 
-fix student bar (number to string conversion)
+* `python manage.py createsuperuser` - add yourself to the database as an admin so that you can login to the REST API
+* `python manage.py migrate` - apply model changes
+* `python manage.py runserver` - run test server default is http://localhost:8000
 
-attendance logic
-##Latest Notes
-##Dependencies
-```
-sudo pip install Django
-sudo pip install djangorestframework
-sudo pip install django-cors-headers
-sudo pip install django-filter
-sudo pip install django-url-filter
-```
-Also: Postgress. See below.
-##Database Clear/Add/Start
-###Clear
+###Database reset & restart
+####Reset
 terminal
 ```
 rm -r myapp/migrations
@@ -37,7 +27,30 @@ psql
 ```
 DROP DATABASE attenddb;
 ```
-###Add
+####Restart
+```
+python manage.py makemigrations myapp
+python manage.py migrate
+```
+
+
+# Installation
+
+##Postgress
+
+First you must install the database.
+
+###1. Install homebrew (Mac)
+
+http://brew.sh/
+
+###2. Install postgresql (Mac):
+```
+brew install postgresql
+brew services start postgresql
+```
+
+###3. Set up database:
 psql
 ```
 CREATE DATABASE attenddb;
@@ -45,26 +58,23 @@ CREATE DATABASE attenddb;
 CREATE USER django WITH PASSWORD 'django' CREATEDB;
 \q
 ```
-###Start
-```
-python manage.py makemigrations myapp
-python manage.py migrate
-```
-##Postgress
 
-###1. Install homebrew
+### Python Virtual Environment
 
-http://brew.sh/
+This project is best ran in a virtual environment. You can use [pyvenv][2],
+which comes with python 3 and greater. The virtual enviroment lets you run
+different versions of python and packages from other projects.
 
-###2. Terminal commands:
-```
-sudo brew install postgresql
-sudo pip install psycopg2
-```
+#### Django Installation (Unix)
 
-###3. Run postgresql.app
-http://postgresapp.com/
-Click elephant (top of screen) to run psql
-#The Holy Bible
+First install python2+ on your machine and then download and install [pip][1].
+Then from the root of the project run:
+
+1. `pyvenv venv` - Create a virtual environment in the venv folder
+2. `source venv/bin/activate` - Load the environment
+3. `pip install -r Requirements.txt` - Install dependencies
+4. `deactivate` - Unloads the environment
+
+#Technology Documentation
 https://docs.djangoproject.com/en/1.9/intro/tutorial01/
 http://www.django-rest-framework.org/tutorial/quickstart/
