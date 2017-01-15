@@ -74,7 +74,3 @@ Then from the root of the project run:
 2. `source venv/bin/activate` - Load the environment
 3. `pip install -r Requirements.txt` - Install dependencies
 4. `deactivate` - Unloads the environment
-
-#Technology Documentation
-https://docs.djangoproject.com/en/1.9/intro/tutorial01/
-http://www.django-rest-framework.org/tutorial/quickstart/
